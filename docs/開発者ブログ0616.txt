@@ -1,0 +1,4 @@
+<title>Google Cloud Next'17 in Tokyo に行ってきました</title>
+こんにちは、フロントエンドエンジニアの小原です。
+
+6/14・6/15に開催された「Google Cloud Next'17 in Tokyo」に行ってきました。
