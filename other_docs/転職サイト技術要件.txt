@@ -1,0 +1,37 @@
+
+<h1>Green</h1>
+■必須スキル・経験
+・HTML/CSS/JSを用いたwebアプリケーションの実務経験1年程度
+
+■歓迎するスキル・経験
+※下記に1つでも当てはまる方や、現在習得中という方は特に優遇します！
+・OSS活動などのプロジェクトに参加している方
+・HTML5/CSS3を用いた実務経験
+・GitHubなどでプルリクエスト、コードレビューを用いた実務経験
+・Ruby on Rails、またはPHP各種フレームワークでの開発経験
+・Javascript各種フレームワーク、ライブラリでの開発経験
+・UI/UXデザイナーとしての経験
+・CSSプリプロセッサ(LESS，Sass，SCSS)の実務経験
+・gulp・Webpackなどのタスクランナー・ビルドツールの実務経験
+
+【求める人物像】
+■チームワークに抵抗がない方
+■能動的に動き積極的に提案できる方
+■最新のトレンドを常にチェックしている方
+
+
+<h1>@Type</h1>
+言語：HTML5/CSS3/JavaScript(CoffeeScript)
+フレームワーク：Ruby on Rails / Vue.js
+タスクランナー：Gulp
+データベース：MySQL
+環境：AWS (EC2/S3/CloudFront/RDS/Route 53)
+CIツール：CircleCI
+バージョン管理：GitHub / Bitbucket
+タスク管理：Trello / Pivotal Tracker
+
+【メンバー】
+20代1名、30代2名のフロントエンドエンジニアが在籍中です。
+
+★使用するPCは入社時にWindows、Macいずれかを希望で選択。
+そのほかデバイスなどの希望も申請OKです！（モニターをデュアルディスプレイにする事も可能）
