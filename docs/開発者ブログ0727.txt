@@ -37,14 +37,15 @@ draw.ioですが
 ぼくがかんがえたよくあるWEBアプリのシステム概念図
 <img src="" alt="demo.png">
 
-ぼくがかんがえたよくあるWEBアプリのワイヤーフレーム
-<img src="" alt="wf1.png">
-
 ぼくがかんがえたよくある会社の組織図
 <img src="" alt="corp.png">
 
-ぼくがかんがえたよくある会社のオフィスレイアウト
+よくあるWEBアプリのワイヤーフレーム(draw.ioのテンプレート)
+<img src="" alt="wf1.png">
+
+よくある会社のオフィスレイアウト(draw.ioのテンプレート)
 <img src="" alt="office.png">
+
 
 こんな感じで、絵おこしをすることが出来ます。
 ファイルはXMLで保存されますが、png・やSVGなどの画像、PDF、HTMLへの書き出しも出来るので、Qiita:TeamやConfluenceなどの社内Wikiなどでも使用できます。また、GitHubと連携することでバージョン管理も可能です。
