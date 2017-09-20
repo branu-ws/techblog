@@ -36,12 +36,12 @@ MVC（Model View Controller モデル・ビュー・コントローラ）は、�
 ・<a href="https://jp.vuejs.org/index.html">Vue.js</a>
 ・<a href="http://aurelia.io/">aurelia</a>
 ・<a href="http://riotjs.com/ja/">Riot</a>
-・<a href="http://backbonejs.org/"Backbone></a>
+・<a href="http://backbonejs.org/">Backbone></a>
 ・<a href="http://knockoutjs.com/">Knockout</a>
 ・<a href="https://www.emberjs.com/">ember</a>
 ・<a href="https://jquery.com/">jQuery</a>
 
-jQueryはライブラリだしReactはViewのみのライブラリだったり、ほとんどがMVCというよりもMVVM(Model View ViewModel)フレームワークだったり、少しずつ目的や機能が違いますが、現状でこのぐらいあります。あとAngularとAngular.js(1.X系)は別物として扱いました。jQueryは別として2016年頃まではReactとAngular.jsが流行していましたが、2017年に入りVue.jsが流行している感じです。ちなみに、EatもVue.jsを採用しています。
+jQueryはライブラリだしReactはViewのみのライブラリだったり、ほとんどがMVCというよりもMVVM(Model View ViewModel)フレームワークだったり、少しずつ目的や機能が違いますが、現状でこのぐらいあります。あとAngularとAngular.js(1.X系)は別物として扱いました。jQueryは別として2016年頃まではReactとAngular.jsが流行していましたが、2017年に入りVue.jsが流行している感じです。ちなみに、eatもVue.jsを採用しています。
 
 余談ですがこれらフレームワークに加え、フロントエンド界隈はaltJSやモジュールバンドラ・タスクランナー・トランスパイラなど開発環境も混沌としているせいか、知人のエンジニアは「フロントエンドはしんどい」と嘆いていました。
 
