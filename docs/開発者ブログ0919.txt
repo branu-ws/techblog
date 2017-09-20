@@ -7,7 +7,7 @@
 
 さて、そんなわけで本日のテーマは「今さら聞けない？MVC(MVVM)とJavaScriptフレームワーク」です。
 
-<h3>MVC(MVVM)とは？</h3>
+<h3>MVCとは？</h3>
 <blockquote>
 MVC（Model View Controller モデル・ビュー・コントローラ）は、ユーザーインタフェースをもつアプリケーションソフトウェアを実装するためのデザインパターンである。
 アプリケーションソフトウェアの内部データを、ユーザーが直接参照・編集する情報から分離する。そのためにアプリケーションソフトウェアを以下の3つの部分に分割する。
@@ -41,7 +41,7 @@ MVC（Model View Controller モデル・ビュー・コントローラ）は、�
 ・<a href="https://www.emberjs.com/">ember</a>
 ・<a href="https://jquery.com/">jQuery</a>
 
-jQueryはライブラリだしReactはViewのみのライブラリだったり少しずつ目的や機能が違いますが、現状でこのぐらいあります。あとAngularとAngular.js(1.X系)は別物として扱いました。jQueryは別として2016年頃まではReactとAngular.jsが流行していましたが、2017年に入りVue.jsが流行している感じです。ちなみに、EatもVue.jsを採用しています。
+jQueryはライブラリだしReactはViewのみのライブラリだったり、ほとんどがMVCというよりもMVVM(Model View ViewModel)フレームワークだったり、少しずつ目的や機能が違いますが、現状でこのぐらいあります。あとAngularとAngular.js(1.X系)は別物として扱いました。jQueryは別として2016年頃まではReactとAngular.jsが流行していましたが、2017年に入りVue.jsが流行している感じです。ちなみに、EatもVue.jsを採用しています。
 
 余談ですがこれらフレームワークに加え、フロントエンド界隈はaltJSやモジュールバンドラ・タスクランナー・トランスパイラなど開発環境も混沌としているせいか、知人のエンジニアは「フロントエンドはしんどい」と嘆いていました。
 
