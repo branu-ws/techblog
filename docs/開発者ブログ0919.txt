@@ -36,7 +36,7 @@ MVC（Model View Controller モデル・ビュー・コントローラ）は、�
 ・<a href="https://jp.vuejs.org/index.html">Vue.js</a>
 ・<a href="http://aurelia.io/">aurelia</a>
 ・<a href="http://riotjs.com/ja/">Riot</a>
-・<a href="http://backbonejs.org/">Backbone></a>
+・<a href="http://backbonejs.org/">Backbone</a>
 ・<a href="http://knockoutjs.com/">Knockout</a>
 ・<a href="https://www.emberjs.com/">ember</a>
 ・<a href="https://jquery.com/">jQuery</a>
