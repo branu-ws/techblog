@@ -1,0 +1,56 @@
+<title>今さら聞けない？サーバサイドレンダリング(SSR)</title>
+<img title="vue.png">
+
+こんにちは、フロントエンドエンジニアの小原です。
+去る10/4に恵比寿で開催された「Vue.js Tokyo v-meetup #5」に参加してきました。
+
+<img title="v-meetup1.jpg">
+
+以下が勉強会の発表資料です。
+
+・<a href="https://speakerdeck.com/wakameisono/nuxt-dot-jsdeye-wu-sisutemuwozuo-tutahua">Nuxt.jsで業務システムを作った話 by Wakame</a>
+・<a href="https://speakerdeck.com/urverispecial/vuefalsebatukuendotosite-firebasewoshi-tutahua">Vueのバックエンドとして Firebaseを使った話 by UrVerySpecial</a>
+・<a href="https://speakerdeck.com/ishkawa/nuxt-dot-jsgajie-geru-universal-vue-dot-js-applications-tohahe-zhe-ka">Nuxt.jsが掲げる"Universal Vue.js Applications"とは何者か by Yosuke Ishikawa</a>
+・<a href="https://speakerdeck.com/dotneet/nuxt-dot-jsben-ge-dao-ru-deyuan-hui-risinaitamefalsetips">Nuxt.js本格導入で遠回りしないためのTips by Shinji Yamada</a>
+・<a href="https://www.slideshare.net/vwxyutarooo/nuxt-vue-app-5/1">Nuxt なしで Vue App 作る時に乗り越えるべき5つの壁</a>
+
+
+・<a href="https://www.wantedly.com/companies/branu/post_articles/79039">以前のブログでも書きましたが</a>、Vue.jsは既存アプリへの部分導入から本格的なSPAまで幅広く対応しているJavaScriptフレームワークです。今回の勉強会は主に「Nuxt.jsを使ったサーバサイドレンダリング」についてのものが多かったです。そんな訳で、今回は「今更聞けない？サーバサイドレンダリング(SSR)」です（この「今さら聞けない？」はシリーズ化しそう…）。
+
+<h3>そもそもサーバサイドレンダリングって</h3>
+簡単に言うと「SPAなどで本来クライアントで生成するHTMLをサーバで生成する」というものです。図にするとこんな感じ
+
+<img title="ssr.png">
+去年の秋ぐらいに、某社の技術ブログで見たとき「なんでSPAにしたのにわざわざまたサーバでレンダリング？」と、自分自身正直なところメリットが理解できていませんでした。それなら従来的なPHPとかでええやんと(現に「サーバサイドレンダリング」でググると<a href="https://qiita.com/shibukawa/items/184d3101946ec4fa98c1">サーバーサイドレンダリング不要論</a>なんてQiitaのページが出てきます)。
+
+しかし、以前とあるエンジニア(インフラよりのフルスタック系の人)に聞いたところ以下のようにご教示頂きました。
+
+・従来的なバックエンド処理に比べてインフラコストが下がる
+・通常のSPAに比べて初期表示が早い
+・SEOに強い(metaやOGPなども吐き出してくれる、ただしこれは諸説あり)
+
+などがあるそうです。従来的なWebアプリケーションとSPAのいいとこ取りですね。
+ただ、SSRはSPA以上に実装工数が多く、どうしても開発コストが上がりがちです。そこで出てきたのがNuxt.jsです。
+
+<img title="nuxt.png">
+
+・<a href="https://ja.nuxtjs.org/">Nuxt.js - ユニバーサル Vue.js アプリケーション</a>
+
+Vue.jsアプリケーションでSSRするためのフレームワークだそうです。以下の便利機能が有ります。
+
+・サーバサイドレンダリング
+・ES6/ES7のトランスパイル
+・ルーティング機能
+・JS/CSSの圧縮
+・Sassなどのコンパイル
+・Head要素内の管理
+・開発モードにおける自動リロード
+
+コンパイルやミニファイや自動リロードなどはwebpackの機能ですが、このようなことが出来ます。従来のRailsやGulpなどでサポートしている機能をVue.js+webpackで実現している感じです。これとNode.jsを組み合わせれば、ほぼJavaScriptだけでWebアプリケーションが構築できますね。
+
+当日のLTでは<a href="https://speakerdeck.com/urverispecial/vuefalsebatukuendotosite-firebasewoshi-tutahua">Vueのバックエンドとして Firebaseを使った話</a>というものもあったので、軽量アプリならFirebase+Vue.jsという選択肢も出てきそうです。
+
+<h3>どこでどうやって使う？</h3>
+さて、Vue.jsのメリットとして既存のフレームワークやWebアプリケーションへの部分導入というものが有りますが（ブラニューでもそういった導入の仕方をしています）、流石にNuxt.jsでアプリケーションを作ろうとすると、新規開発するか完全にリプレースするかのいずれかになるかと思います。
+
+今後、自分たちの開発で導入していくとすれば、マイクロサービス的に新たに機能を追加する場合とかでしょうか。そして次の「今さら聞けない？シリーズ」は「今さら聞けない？マイクロサービス」になりそうです。
