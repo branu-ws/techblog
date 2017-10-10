@@ -46,7 +46,7 @@ Vue.jsアプリケーションでSSRするためのフレームワークだそ�
 ・Head要素内の管理
 ・開発モードにおける自動リロード
 
-コンパイルやミニファイや自動リロードなどはwebpackの機能ですが、このようなことが出来ます。従来のRailsやGulpなどでサポートしている機能をVue.js+webpackで実現している感じです。これとNode.jsを組み合わせれば、ほぼJavaScriptだけでWebアプリケーションが構築できますね。
+コンパイルやミニファイや自動リロードなどはwebpackの機能ですが、このようなことが出来ます。従来のRailsやGulpなどでサポートしている機能をVue.js+webpackで実現している感じです。webpackプラグインを使えば、Typescriptなど他のaltJSも使えるようです。これとNode.jsを組み合わせれば、ほぼJavaScriptだけでWebアプリケーションが構築できますね。
 
 当日のLTでは<a href="https://speakerdeck.com/urverispecial/vuefalsebatukuendotosite-firebasewoshi-tutahua">Vueのバックエンドとして Firebaseを使った話</a>というものもあったので、軽量アプリならFirebase+Vue.jsという選択肢も出てきそうです。
 
