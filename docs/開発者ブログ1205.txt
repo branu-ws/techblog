@@ -20,7 +20,7 @@
 
 <a href="https://ja.nuxtjs.org/">公式サイト</a>では「ユニバーサル Vue.jsアプリケーション」と名乗っていますが、印象としてはVue.jsをwebpackによってフルスタック化したものと言う感じでした（フルスタックの定義にもよりますが、UIライブラリからルーティング、レンダラやコンパイラを内包しているので、Angular的なフルスタックフレームワークだと思う）。
 
-一方でES6(ES7)、TypeScript、CoffeeScriptなど複数のECMAScript/AltJSに対応している(Angularのイケてないところ)、構文的にはHTMLとCSSとJavaScriptが分離されているというVue.jsの特性(Reactのイケてないところ)、SSRだけでなくSPAや静的なページの生成も可能と、出来ることの多さの割に学習コストが低いという、Vue.jsの特性も保っていました。
+一方でES6(ES7)、TypeScript、CoffeeScriptなど複数のECMAScript/AltJSに対応している、構文的にはHTMLとCSSとJavaScriptが分離されているというVue.jsの特性、SSRだけでなくSPAや静的なページの生成も可能と、出来ることの多さの割に学習コストが低いという、Vue.jsの特性も保っていました。AngularですとTypeScriptでの開発が前提になりますし、Reactは思想的な背景からロジックとUIが結合してます(※この辺はReduxを使えばある程度解消ですが…）。
 
 <h3>Vuexうめえ</h3>
 現状のeatではVuexは部分的に使っているのですが、Vuexでフロントをコンポーネント的に書くのがすごく楽でしたね。これはNuxt.jsの特徴というよりもVuexの特徴ですが、Vuexが最初からフレームワークに取り込まれているので、構築に悩むことがないという意味で、Vue.js初心者が次にコンポーネントを学習するのに最適だと思います。もっと簡単という意味では<a href="http://riotjs.com/ja/">RIOT</a>と言うものもありますが、拡張性ではVue+Vuexの方が優れています。
