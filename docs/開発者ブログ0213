@@ -1,6 +1,8 @@
 こんにちは。フルスタックエンジニアのミラーです。
 
 
+Repo: https://github.com/lmiller1990/vue-rails-form-validation
+
 Vue.js can be used for building scalable, complex single page applications, which is generally what I blog about. However, another value use case is as a utility library to add some dynamic functionality to server rendered applications. 
 This article will look at how we can use Vue.js to add some client side form validation in a Rails application.
 
