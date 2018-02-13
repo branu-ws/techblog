@@ -1,0 +1,219 @@
+こんにちは。フルスタックエンジニアのミラーです。
+
+
+Vue.js can be used for building scalable, complex single page applications, which is generally what I blog about. However, another value use case is as a utility library to add some dynamic functionality to server rendered applications. 
+This article will look at how we can use Vue.js to add some client side form validation in a Rails application.
+
+## Setup
+
+Scaffold a new application using rails new blogger. A future article will look at how to use the new webpacker gem to bundle the application using webpack; for simplicity, I’ll stick with the usual Rails asset pipeline for now.
+After creating the Rails app, add the following to your Gemfile:
+
+gem 'vuejs-rails'
+
+and bundle install. This adds Vue to the asset pipeline. Lastly, we need to include it in assets/javascripts/application.js:
+
+//= require vue 
+
+## Creating the controller and model
+
+This will be a simple form — it allows the user to create a Blog, which has a title and body, with minimum lengths of 5 and 10. Firstly, create the controller and actions:
+
+```
+rails generate controlls blogs index create new
+```
+
+and the model:
+
+```
+rails generate model blog title:string body:string
+```
+
+migrate your database with `bin/rails db:migrate`.
+
+## Adding the routes
+
+Creating the routes is easy. Update `routes.rb`:
+```
+Rails.application.routes.draw do
+  resources :blogs
+end
+```
+
+## Creating the controller actions
+
+For the purpose of this demo, we only need three actions: `create`, `new` and `index`. We will also whitelist the params as is usual in Rails controllers.
+
+```rb
+class BlogsController < ApplicationController
+def index
+    @blogs = Blog.all
+end
+
+def create
+    @blog = Blog.new(blog_params)
+    if @blog.save!
+        render json: {}, status: :created
+    else
+        render json: {}, status: :internal_server_error
+    end
+end
+
+def new
+    @blog = Blog.new(title: 'Title', body: '')
+end
+
+private
+
+def blog_params
+    params.require(:blog).permit(:title, :body)
+  end
+end
+
+## Creating the view
+
+This is where things get a bit interesting. We need to pass the data from @blog to the Vue instance (which we have not made yet). Update app/views/blogs/new.html.erb, which should have been generated when you scaffolded the controller earlier:
+
+```
+<h1>Blogs#new</h1>
+<p>Find me in app/views/blogs/new.html.erb</p>
+<%= content_tag :div,
+  id: 'blog-form-vue',
+  data: {
+    blog: @blog.to_json(),
+  } do %>
+<% end %>
+```
+
+No form yet. However, this is how the Vue instance will access the @blog variable from the controller’s new action — by using Rails’ `content_tag` helper. If you look in the devtools, this HTML is generated:
+
+[image??]
+
+HTML generated using the content_tag helper
+
+Notice the JSON object in data-blog?
+
+## Creating the Vue instance
+
+Head over to `assets/javascripts/blogs.coffee` and add the following:
+
+```
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/
+#
+document.addEventListener 'DOMContentLoaded', () ->
+  el = document.getElementById('blog-form-vue')
+if el
+  blog = JSON.parse(el.dataset.blog)
+  csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  new Vue({
+    el: el,
+      
+    data: ->
+      blog: blog
+```
+
+Pretty neat. After waiting for the DOM to render, we can access to data-blog attribute using `JSON.parse(el.dataset.blog)` after finding the element. The we simply pass the object to the our new Vue instance. We also grab the CSRF token from the meta tags.
+
+## Adding some validation
+
+Let’s add the validation. We can use Vue’s computed properties to check if the form is valid and toggle the submit button’s disabled attribute. Update `blogs.coffee`:
+
+```
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/
+#
+document.addEventListener 'DOMContentLoaded', () ->
+  el = document.getElementById('blog-form-vue')
+  blog = JSON.parse(el.dataset.blog)
+  csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  if el
+    new Vue({
+      el: el,
+      
+      data: ->
+        blog: blog
+        titleError: 'Title has to be at least 5 characters'
+        bodyError: 'Body has to be at least 10 characters'
+        csrfToken: csrfToken
+      computed:        
+        valid: ()->
+          @blog.title.length > 5 && @blog.body.length > 10
+    })
+```
+
+And the form (views/blogs/new.html.erb):
+
+```
+<h1>Blogs#new</h1>
+<p>Find me in app/views/blogs/new.html.erb</p>
+<%= content_tag :div,
+  id: 'blog-form-vue',
+  data: {
+    blog: @blog.to_json()
+  } do %>
+  <form @submit.prevent="submit">
+    <label for="title">Title</label>
+    <input v-model="blog.title" id="title">
+    <div class="error" v-if="blog.title.length <= 5">
+      The title needs to be at least 5 characters.
+    </div>
+    <label for="blog-body">Body</label>
+    <input id="blog-body" v-model="blog.body">
+    <div class="error" v-if="blog.body.length <= 10">
+      The body needs to be at least 10 characters.
+    </div>
+    <input 
+      type="submit" 
+      value="Create blog" 
+      :disabled="!valid"
+    >
+  </form>
+<% end %>
+<style>
+label, input {
+  display: block;
+} 
+.error {
+  margin: 5px 0px 10px 10px;
+}
+input[type="submit"] {
+  margin: 10px;
+}
+</style>
+```
+
+Notable points:
+- We can bind to the forms disabled attribute and automatically disable the button if the form is not valid using :disabled="!valid" .
+- We use v-model to achieve two-way binding on the blog’s title and body.
+- We submit the form using form @submit.prevent=”submit” . prevent ensures the page does not redirect — we will leave that up to the submit method we are about to write.
+- We use v-if to conditionally show form errors.
+
+## Submitting the form
+
+Let’s add the submit method to the Vue instance:
+
+```
+methods:
+  buildRequest: ()->
+    headers = new Headers()
+    headers.append('Content-Type', 'application/json')     
+    headers.append('X-Requested-With', 'XMLHttpRequest')
+    headers.append('X-CSRF-TOKEN', @csrfToken)
+    new Request('/blogs', {
+      headers: headers,
+      method: 'POST',  
+      credentials: 'same-origin',
+      body: JSON.stringify({ title: @blog.title, body: @blog.body })
+  })
+  submit: ()->
+    window.fetch @buildRequest()
+        .then (data) ->
+          if data.status == 201
+            window.location.href = '/blogs'
+```
+
+We use the fetch web API to submit the form asynchronously. We have to add the Content-Type as json, so the Rails controller knows how to process the form, and some other headers. We should also call JSON.stringify on the body of the request, or Object [object] will be sent instead. Lastly, we redirect using `window.location.href` to the index and show all the blogs. 
+
