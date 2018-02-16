@@ -1,0 +1,201 @@
+<title>eatでHTML/CSS編集ができるようになりました！</title>
+
+こんにちは、フロントエンドエンジニアの小原です。
+
+去る1/25にeat大型アップデートを行い、「メールマガジン作成/一括配信機能」「顧客情報インポート/エクスポート機能」「HTML/CSS編集機能」が追加されました。
+他にも、「WYSIWYGのUI改善」「テンプレート選択画面のUI改善」「スライダーセクションの追加」など、今回は大幅な機能追加と改修となっております。
+
+今回はそのうちの一つ「HTML/CSS」を使って、eatでサイトを作ってみたいと思います。
+
+### なんでもできるぞ「セクション編集モード」
+まずはeatでアカウントを作成して下さい。さすがにこれがないとなにもできません。
+
+<img title="ログイン画面 login.png">
+
+アカウントを作成したらプロジェクトを作成します。
+
+<img title="プロジェクト作成画面 pj.png">
+
+プロジェクト作成後、プランを「ライト」または「スターター」を選択します。
+※HTML/CSS編集は有料プランのみのサービス提供となります。
+
+<img title="プラン選択画面 plan.png">
+
+プランを選択したらテンプレートを選択してサイト作成を開始します。
+今回は「cafe」テンプレートを使いました。
+
+<img title="テンプレート選択画面 template.png">
+
+セクション挿入ボタンをクリックするセクションを選ぶ画面が現れます。「プレミアム」から「editable」を選んで追加して下さい。
+
+<img title="セクション追加画面 section.png">
+
+セクションが挿入されました。デフォルトでは以下のようになっています。
+
+<img title="セクション追加後のedit after.png">
+
+html編集アイコンをクリックして、HTML編集モーダルを開きます。
+
+<img title="HTML編集モーダル edit.png">
+
+初期状態では「half」と同じHTMLがはいっています。HTMLとCSSをここに書いていきましょう。今回はJavaScript(jQuery)も使用して、タブ・アコーディオン・ドラッガブルボックスを作ってみました。
+
+```
+
+<div id="html_section_tab" class="html_section_tab">
+
+<div class="sub_box">
+<h3 class="sub_box_head">タブを作ってみた</h3>
+
+<div id="tab_list" class="tab_list">
+<ul>
+<li class="active"><a href="javascript:void(0)" data-tab="#tab_box1" class="tab">tab1</a></li>
+<li class=""><a href="javascript:void(0)" data-tab="#tab_box2" class="tab">tab2</a></li>
+<li class=""><a href="javascript:void(0)" data-tab="#tab_box3" class="tab">tab3</a></li>
+</ul>
+<div id="tab_wrap" class="tab_wrap">
+
+<div id="tab_box1" class="tab_box">HTML編集ならばちょっとしたアクションも作れます。JavaScriptが使える人なら自分で色々できます。</div>
+<div id="tab_box2" class="tab_box" style="display: none;">今回はまずタブから作ってみましょう。</div>
+<div id="tab_box3" class="tab_box" style="display: none;">タブはjQueryが使える人なら簡単に作れます。</div>
+</div>
+
+</div>
+</div>
+
+<div class="sub_box">
+<h3 class="sub_box_head">アコーディオンを作ってみた</h3>
+<div id="accordion" class="accordion">
+<dl>
+<dt><button class="accordion_button">アコーディオンボタン1<i class="material-icons">keyboard_arrow_down</i></button></dt>
+<dd style="display: none;">アコーディオンも簡単に作れます。</dd>
+<dt><button class="accordion_button">アコーディオンボタン2<i class="material-icons">keyboard_arrow_down</i></button></dt>
+<dd style="display: none;">jQuery(JS自体を使わない)を使わない方法もありますが、今回はjQueryでつくりました。</dd>
+</dl>
+</div>
+</div>
+
+<div class="sub_box">
+<h3 class="sub_box_head">ドラッグ＆ドロップでグリグリ動く</h3>
+<div id="drag" class="drag ui-draggable ui-draggable-handle" style="position: relative;">
+<h4>ドラッグ対応</h4>
+<p>マウスポインタをあわせてドラッグすると、このボックスが動くよ。</p>
+<p>jQuery UIのDraggableで動かしています。</p>
+</div>
+
+</div>
+
+<style>
+
+.html_section_tab {
+padding: 20px;
+}
+
+.drag {
+width: 300px;
+height: 200px;
+border: solid 1px #ccc;
+}
+
+.drag h4 {
+background: #aaa;
+color: #fff;
+padding: 5px;
+cursor: pointer;
+}
+
+.drag p{
+margin 10px;
+}
+
+.sub_box {
+margin-bottom: 20px;
+}
+
+.accordion_button{
+background: #b4b4b4;
+color: #fff;
+text-align: center;
+padding: 10px;
+border-radius: 4px;
+margin-bottom: 10px;
+position: relative;
+width: 220px;
+}
+
+.accordion_button .material-icons {
+position: absolute;
+top: 10px;
+right: 10px;
+}
+
+.accordion dd{
+display: none;
+margin-bottom: 20px;
+}
+
+.tab_list {
+width: 600px;
+}
+.tab_list ul {
+ display: flex;
+}
+.tab_list ul li{
+width: 200px;
+text-align: center;
+border: solid 1px #ccc;
+}
+.tab_list ul li.active{
+background:#ccc;
+}
+.tab_list ul li a{
+display:block;
+padding: 10px 0;
+}
+
+.tab_wrap {
+border: solid 1px #ccc;
+border-top: none;
+padding: 10px;
+}
+
+</style>
+
+<script>
+$(function () {
+$('.tab').on('click', function() {
+$('.tab_box').hide();
+$($(this).attr("data-tab")).fadeToggle();
+$(this).parent().addClass('active');
+$(this).parent().nextAll().removeClass('active');
+$(this).parent().prevAll().removeClass('active');
+});
+
+$('.accordion_button').on('click', function() {
+$(this).parent('dt').next('dd').slideToggle();
+});
+
+$('#drag').draggable();
+
+});
+</script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</div>
+
+```
+<img title="sample.png">
+<a href="http://4ca9e2ec.eat.auto/">サンプルページ</a>
+
+jQueryは元々読み込んであるので、すぐに使うことが出来ます。今回は簡単のアクションをサンプルとして実装しましたが、JavaScriptを使って外部APIの利用や、JavaScriptライブラリやCDNの利用もできます。
+
+※全てのAPI、ライブラリ、CDNの利用を保証するものではありません。また外部API、ライブラリ、CDNの利用に関するサポート、責任は弊社では負いかねますのでご了承下さい。
+
+### HTML編集モードはライトプランからのご利用となります。
+HTML編集モードはこんな方におすすめです
+
+- eatの無料プランや他のCMSとか使ったけど、HTML/CSSでもっと色々やってみたい。
+- 色々やりたいけど、WordPressとか立てるのは面倒。
+- 普段の作成や更新は簡単にしたいけど、凝ったものも作りたい。
+- 外部のサービスと連携したい
+
+もちろん、フリープランでもサイト自体の作成はできますので、興味ある方はぜひご利用下さい。
