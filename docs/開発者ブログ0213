@@ -135,16 +135,7 @@ document.addEventListener 'DOMContentLoaded', () ->
 ```
 
 そして、フォームも更新します：(`views/blogs/new.html.erb`)。
-
-```
-<h1>Blogs#new</h1>
-<p>Find me in app/views/blogs/new.html.erb</p>
-<%= content_tag :div,
-  id: 'blog-form-vue',
-  data: {
-    blog: @blog.to_json()
-  } do %>
-  <form @submit="submit">
+  <form @submit.prevent="submit">
     <label for="title">Title</label>
     <input v-model="blog.title" id="title">
     <div class="error" v-if="blog.title.length <= 5">
