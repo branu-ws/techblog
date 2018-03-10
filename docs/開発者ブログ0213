@@ -1,12 +1,12 @@
-こんにちは。フルスタックエンジニアのミラーです。ぶらニューで、RailsとVue.jsで[EAT](start.eat.auto)の開発をしています。
+こんにちは。フルスタックエンジニアのミラーです。ブラニューで、RailsとVue.jsで[EAT](start.eat.auto)の開発をしています。
 
-Vue.jsで複雑でスケーラベルなSPAを作るのに使えますが、伝統的なサーバーでレンダーされるアプリケーションに動的な行動をつけるためにも便利です。 
+Vue.jsで複雑でスケーラブルなSPAを作るのに使えますが、従来的なサーバーレンダーされるアプリケーションに動的アクションを付けるのにも便利です。
 
 この記事でRailsアプリケーションにVue.jsでフォームバリデーションをします。
 
 ソースコードはこちらで。https://github.com/lmiller1990/vue-rails-form-validation
 
-`rails new blogger`で新しいレイルズアピリケーションをさくせいします。Vue.jsを`webpacker`で追加するのも可能ですが、この記事でデフォルトのアセットパイプラインで追加します。
+`rails new blogger`で新しいRailsアプリケーションを作成します。Vue.jsを`webpacker`で追加するのも可能ですが、この記事でデフォルトのアセットパイプラインで追加します。
 
 `Gemfile`で`vuejs-rails`を追加します。
 
@@ -17,7 +17,7 @@ Vue.jsで複雑でスケーラベルなSPAを作るのに使えますが、伝�
 `//= require vue`
 
 ###　コントローラとモデルを作成
-ow作成アピリケーションは簡単です。ただのフォームで`blog`を作ります。`blog`には`title`, `body`があります。コントローラを作ります。
+アプリケーション作成は簡単です。ただのフォームで`blog`を作ります。`blog`には`title`, `body`があります。コントローラを作ります。
 
 `rails generate controller blogs index create new`
 
@@ -25,7 +25,7 @@ ow作成アピリケーションは簡単です。ただのフォームで`blog`
 
 `rails generate model blog title:string body:string`
 
-と、データベースをマイグレートします：
+と、モデルとデータベースをマイグレートします：
 
 `bin/rails db:migrate`
 
@@ -64,10 +64,10 @@ class BlogsController < ApplicationController
 end
 ```
 
-一般的なレイルズのコントローラです。これからVueを使います！
+一般的なRailsのコントローラです。これからVueを使います！
 
-### ビューを作成
-コントローラの`new`アクションで定義された`@blog`をビューのフォームに渡さないといけません。`app/views/blogs/new.html.erb`を更新します：
+### Viewを作成を作成
+コントローラの`new`アクションで定義された`@blog`をViewを作成のフォームに渡さないといけません。`app/views/blogs/new.html.erb`を更新します：
 
 ```
 <h1>Blogs#new</h1>
@@ -90,7 +90,7 @@ end
 
 https://cdn-images-1.medium.com/max/800/1*mzcXtB19FJ386_JgNHMCGQ.png
 
-### Vueインスタナスを作成
+### Vueインスタンスを作成
 `assets/javascripts/blogs.coffee`を更新します：
 
 ```
@@ -167,8 +167,8 @@ input[type="submit"] {
 ```
 
 面白い点：
-- `disabled`属性にバイドして、フォームを検証して問題があれば自動的に`disabled=true`：`:disabled="!valid"`。
-- `v-model`でブログの`title`, `body`でバインとします。
+- `disabled`属性にバインドして、フォームを検証して問題があれば自動的に`disabled=true`：`:disabled="!valid"`。
+- `v-model`でブログの`title`, `body`でバインドします。
 - `@submit.prevent="submit"`でフォームを送信します。これから`submit`を書きます。ページを同期に送信します。
 - `v-if`
 
@@ -197,7 +197,7 @@ methods:
           window.location.href = '/blogs'
 ```
 
-`fetch`でフォームを同期的に送信します。ひつようなヘッダーを追加しないと送信できません。`body`を`JSON.stringify`しないと`Object [object]`のままで送信されてしまします。
+`fetch`でフォームを同期的に送信します。必要なヘッダーを追加しないと送信できません。`body`を`JSON.stringify`しないと`Object [object]`のままで送信されてしまします。
 
 問題がなければ、201レスポンスがコントローラから戻って、`index`に飛ばします。
 
@@ -215,7 +215,7 @@ methods:
 
 https://cdn-images-1.medium.com/max/800/1*q1k6OnSzkwV7r2gLoozj5w.png
 
-### おもため
+### まとめ
 Vue.jsをSPAによく使いますが、伝統的なサーバーアプリにも使うことも便利です。今後の記事でVue.jsをwebpackでバンドルしてアプリケーションを作成してみます。
 
 ソースコードはこちらで。https://github.com/lmiller1990/vue-rails-form-validation
