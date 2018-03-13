@@ -1,78 +1,73 @@
-こんにちは。フルスタックエンジニアのミラーです。
+こんにちは。フルスタックエンジニアのミラーです。ブラニューで、RailsとVue.jsで[EAT](start.eat.auto)の開発をしています。
 
+Vue.jsでは複雑でスケーラブルなSPAを作るのに使えますが、従来的なサーバーレンダーされるアプリケーションに動的アクションを付けるのにも便利です。
 
-Vue.js can be used for building scalable, complex single page applications, which is generally what I blog about. However, another value use case is as a utility library to add some dynamic functionality to server rendered applications. 
-This article will look at how we can use Vue.js to add some client side form validation in a Rails application.
+この記事でRailsアプリケーションにVue.jsでフォームバリデーションをします。
 
-## Setup
+ソースコードはこちらで。https://github.com/lmiller1990/vue-rails-form-validation
 
-Scaffold a new application using rails new blogger. A future article will look at how to use the new webpacker gem to bundle the application using webpack; for simplicity, I’ll stick with the usual Rails asset pipeline for now.
-After creating the Rails app, add the following to your Gemfile:
+`rails new blogger`で新しいRailsアプリケーションを作成します。Vue.jsを`webpacker`で追加するのも可能ですが、この記事でデフォルトのアセットパイプラインで追加します。
 
-gem 'vuejs-rails'
+`Gemfile`で`vuejs-rails`を追加します。
 
-and bundle install. This adds Vue to the asset pipeline. Lastly, we need to include it in assets/javascripts/application.js:
+`gem 'vuejs-rails`
 
-//= require vue 
+そして`bundle install`。これでVue.jsをアセットパイプラインに追加します。最後に`assets/javascripts/application.js`で：
 
-## Creating the controller and model
+`//= require vue`
 
-This will be a simple form — it allows the user to create a Blog, which has a title and body, with minimum lengths of 5 and 10. Firstly, create the controller and actions:
+###　コントローラとモデルを作成
+アプリケーション作成は簡単です。ただのフォームで`blog`を作ります。`blog`には`title`, `body`があります。コントローラを作ります。
 
-```
-rails generate controlls blogs index create new
-```
+`rails generate controller blogs index create new`
 
-and the model:
+とモデル：
 
-```
-rails generate model blog title:string body:string
-```
+`rails generate model blog title:string body:string`
 
-migrate your database with `bin/rails db:migrate`.
+と、モデルとデータベースをマイグレートします：
 
-## Adding the routes
+`bin/rails db:migrate`
 
-Creating the routes is easy. Update `routes.rb`:
+### ロートを追加
+`config/routes.rb`を更新します：
+
 ```
 Rails.application.routes.draw do
   resources :blogs
 end
 ```
 
-## Creating the controller actions
+### コントローラのアクションを作成
 
-For the purpose of this demo, we only need three actions: `create`, `new` and `index`. We will also whitelist the params as is usual in Rails controllers.
-
-```rb
+```
 class BlogsController < ApplicationController
-def index
+  def index
     @blogs = Blog.all
-end
-
-def create
-    @blog = Blog.new(blog_params)
-    if @blog.save!
-        render json: {}, status: :created
-    else
-        render json: {}, status: :internal_server_error
-    end
-end
-
-def new
+  end
+  def create    
+    @blog = Blog.new(blog_params)    
+    if @blog.save!      
+      render json: {}, status: :created    
+    else      
+      return :internal_server_error    
+    end  
+  end
+  def new
     @blog = Blog.new(title: 'Title', body: '')
-end
+  end
 
-private
-
-def blog_params
+  private
+  def blog_params
     params.require(:blog).permit(:title, :body)
   end
 end
+```
 
-## Creating the view
+一般的なRailsのコントローラです。これからVueを使います！
 
-This is where things get a bit interesting. We need to pass the data from @blog to the Vue instance (which we have not made yet). Update app/views/blogs/new.html.erb, which should have been generated when you scaffolded the controller earlier:
+### Viewを作成を作成
+コントローラの`new`アクションで定義された`@blog`をViewを作成のフォームに渡さないといけません。`app/views/blogs/new.html.erb`を更新します：
 
 ```
 <h1>Blogs#new</h1>
@@ -85,52 +80,47 @@ This is where things get a bit interesting. We need to pass the data from @blog 
 <% end %>
 ```
 
-No form yet. However, this is how the Vue instance will access the @blog variable from the controller’s new action — by using Rails’ `content_tag` helper. If you look in the devtools, this HTML is generated:
-
-[image??]
-
-HTML generated using the content_tag helper
-
-Notice the JSON object in data-blog?
-
-## Creating the Vue instance
-
-Head over to `assets/javascripts/blogs.coffee` and add the following:
+`content_tag`で`data`に`@blog`を`to_json`で渡します。マークアップを見ると、こうなります：
 
 ```
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
-#
-document.addEventListener 'DOMContentLoaded', () ->
-  el = document.getElementById('blog-form-vue')
-if el
-  blog = JSON.parse(el.dataset.blog)
-  csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-  new Vue({
-    el: el,
-      
-    data: ->
-      blog: blog
-```
+<div 
+  id="blog-form-vue" 
+  data-blog="{"id": null, "title": "Title", "body": ""}
+></div>
 
-Pretty neat. After waiting for the DOM to render, we can access to data-blog attribute using `JSON.parse(el.dataset.blog)` after finding the element. The we simply pass the object to the our new Vue instance. We also grab the CSRF token from the meta tags.
+https://cdn-images-1.medium.com/max/800/1*mzcXtB19FJ386_JgNHMCGQ.png
 
-## Adding some validation
-
-Let’s add the validation. We can use Vue’s computed properties to check if the form is valid and toggle the submit button’s disabled attribute. Update `blogs.coffee`:
+### Vueインスタンスを作成
+`assets/javascripts/blogs.coffee`を更新します：
 
 ```
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
-#
 document.addEventListener 'DOMContentLoaded', () ->
   el = document.getElementById('blog-form-vue')
   blog = JSON.parse(el.dataset.blog)
   csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  
   if el
     new Vue({
+      el: el,
+        
+      data: ->
+        blog: blog
+```
+
+DOMのレンダーが完了すると、`new.html.erb`で作った`<div id="blog-form-vue"を`document.getElementById('blog-form-vue')`で検証して、`data-blog`を`JSON.parse(el.dataset.blog)`で取ることができます。同時に`CSRF`トークンを取ります。
+
+### バリデーション
+Vueの`computed`プロパティーでフォームが正しいか検証できます。問題がなければボタンの`disabled`属性を変えます。`blogs.coffee`を更新します：
+
+```
+document.addEventListener 'DOMContentLoaded', () ->
+  el = document.getElementById('blog-form-vue')
+  
+  if el
+    blog = JSON.parse(el.dataset.blog)
+    csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')    
+  
+  new Vue({
       el: el,
       
       data: ->
@@ -144,16 +134,7 @@ document.addEventListener 'DOMContentLoaded', () ->
     })
 ```
 
-And the form (views/blogs/new.html.erb):
-
-```
-<h1>Blogs#new</h1>
-<p>Find me in app/views/blogs/new.html.erb</p>
-<%= content_tag :div,
-  id: 'blog-form-vue',
-  data: {
-    blog: @blog.to_json()
-  } do %>
+そして、フォームも更新します：(`views/blogs/new.html.erb`)。
   <form @submit.prevent="submit">
     <label for="title">Title</label>
     <input v-model="blog.title" id="title">
@@ -185,15 +166,16 @@ input[type="submit"] {
 </style>
 ```
 
-Notable points:
-- We can bind to the forms disabled attribute and automatically disable the button if the form is not valid using :disabled="!valid" .
-- We use v-model to achieve two-way binding on the blog’s title and body.
-- We submit the form using form @submit.prevent=”submit” . prevent ensures the page does not redirect — we will leave that up to the submit method we are about to write.
-- We use v-if to conditionally show form errors.
+面白い点：
+- `disabled`属性にバインドして、フォームを検証して問題があれば自動的に`disabled=true`：`:disabled="!valid"`。
+- `v-model`でブログの`title`, `body`でバインドします。
+- `@submit.prevent="submit"`でフォームを送信します。これから`submit`を書きます。ページを同期に送信します。
+- `v-if`
 
-## Submitting the form
+https://cdn-images-1.medium.com/max/800/1*ewA3RABqTEE8FFTxePERiQ.png
 
-Let’s add the submit method to the Vue instance:
+### フォームを送信します
+`blogs.coffee`で`submit`メソッドを追加します。
 
 ```
 methods:
@@ -210,10 +192,30 @@ methods:
   })
   submit: ()->
     window.fetch @buildRequest()
-        .then (data) ->
-          if data.status == 201
-            window.location.href = '/blogs'
+      .then (data) ->             
+        if data.status == 201
+          window.location.href = '/blogs'
 ```
 
-We use the fetch web API to submit the form asynchronously. We have to add the Content-Type as json, so the Rails controller knows how to process the form, and some other headers. We should also call JSON.stringify on the body of the request, or Object [object] will be sent instead. Lastly, we redirect using `window.location.href` to the index and show all the blogs. 
+`fetch`でフォームを同期的に送信します。必要なヘッダーを追加しないと送信できません。`body`を`JSON.stringify`しないと`Object [object]`のままで送信されてしまします。
 
+問題がなければ、201レスポンスがコントローラから戻って、`index`に飛ばします。
+
+`views/blogs/index.html.erb`で全てのブログを表示します：
+
+```
+<h1>Blogs#index</h1>
+<p>Find me in app/views/blogs/index.html.erb</p> 
+<ul> 
+  <% @blogs.each do |blog| %> 
+    <li>Title: <%= blog.title %> body: <%= blog.body %></li> 
+  <% end %>
+</ul>
+```
+
+https://cdn-images-1.medium.com/max/800/1*q1k6OnSzkwV7r2gLoozj5w.png
+
+### まとめ
+Vue.jsをSPAによく使いますが、伝統的なサーバーアプリにも使うことも便利です。今後の記事でVue.jsをwebpackでバンドルしてアプリケーションを作成してみます。
+
+ソースコードはこちらで。https://github.com/lmiller1990/vue-rails-form-validation
